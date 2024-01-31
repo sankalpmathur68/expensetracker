@@ -1,7 +1,6 @@
 import 'dart:developer';
 
-import 'package:expensetracker/APIs/wholeAppData.dart';
-import 'package:flutter/material.dart';
+import 'package:expensetracker/APIs/whole_app_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CategoryCubit extends Cubit<CategoryState> {
@@ -10,7 +9,7 @@ class CategoryCubit extends Cubit<CategoryState> {
           catagories: AppData().categories,
         ));
 
-  final iconList = AppData().list_icon;
+  final iconList = AppData().listIcon;
   final categoriesList = AppData().categories;
   List searchedList = AppData().categories;
   sortedList(input) {

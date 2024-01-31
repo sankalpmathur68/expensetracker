@@ -82,7 +82,7 @@ class AppData {
     'Babysitting',
     'Other Uncategorized Expenses',
   ];
-  Map list_icon = {
+  Map listIcon = {
     "Transportation": Icons.directions_car,
     'Travel': Icons.airplanemode_active,
     'Food and Groceries': Icons.local_grocery_store,
@@ -155,6 +155,20 @@ class AppData {
     'Other Uncategorized Expenses': Icons.category,
   };
   Map months = {
+    "January": "1",
+    "February": "2",
+    "March": "3",
+    "April": "4",
+    "May": "5",
+    "June": "6",
+    "July": "7",
+    "August": "8",
+    "September": "9",
+    "October": "10",
+    "November": "11",
+    "December": "12",
+  };
+  Map intTomonths = {
     "1": "January",
     "2": "February",
     "3": "March",
@@ -168,4 +182,11 @@ class AppData {
     "11": "November",
     "12": "December",
   };
+  year() {
+    List years = [];
+    for (int i = 2000; i <= DateTime.now().year; i++) {
+      years.add(i);
+    }
+    return years;
+  }
 }

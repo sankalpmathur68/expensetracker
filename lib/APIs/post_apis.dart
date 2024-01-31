@@ -18,15 +18,35 @@ class PostAPIs {
       log("Error: $e");
     }
   }
+
+  Future<void> deleteExpenseFromDatabase(String expenseId) async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+
+      // Reference to the 'expenses' collection for the specific user in Firestore
+      CollectionReference expenses =
+          FirebaseFirestore.instance.collection('users/$uid/expenses');
+
+      // Use the expenseId to delete the document from the 'expenses' collection
+      await expenses.doc(expenseId).delete();
+
+      print('Expense deleted successfully');
+    } catch (e) {
+      print('Error deleting expense: $e');
+      // Handle the error as needed
+    }
+  }
 }
 
 class Expense {
+  final String? id;
   final String category;
   final int amount;
   final String note;
   final Timestamp timestamp;
   Expense(
-      {required this.category,
+      {this.id,
+      required this.category,
       required this.timestamp,
       required this.amount,
       required this.note});

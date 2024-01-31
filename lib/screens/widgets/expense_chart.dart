@@ -1,9 +1,10 @@
 import 'dart:developer';
 
-import 'package:expensetracker/APIs/wholeAppData.dart';
-import 'package:expensetracker/cubit/all_Expense_cubit.dart';
+import 'package:expensetracker/APIs/whole_app_data.dart';
+import 'package:expensetracker/cubit/all_expense_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ExpenseChart extends StatelessWidget {
   const ExpenseChart({super.key});
@@ -46,48 +47,126 @@ class ExpenseChart extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                      for (String i in allcategories.keys.toList()) ...[
-                        Stack(
-                          alignment: Alignment.bottomCenter,
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 800),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10.0),
-                                    topRight: Radius.circular(10.0),
-                                    bottomLeft: Radius.circular(0.0),
-                                    bottomRight: Radius.circular(0.0),
-                                  ),
-                                ),
-                                // height: 250,
-
-                                height: state is AllExpenseInitial
-                                    ? (((allcategories[i]?['amount']) / max) *
-                                        (250))
-                                    : 0,
-                                width: 40,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                // crossAxisAlignment: CrossAxisAlignment.end,
+                            for (String i in allcategories.keys.toList()) ...[
+                              Stack(
+                                alignment: Alignment.bottomCenter,
                                 children: [
-                                  RotatedBox(
-                                      quarterTurns: 3, child: Text('$i')),
-                                  Icon(AppData().list_icon['$i']),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        // SizedBox(
+                                        //   height: state is AllExpenseInitial
+                                        //       ? 220.0 -
+                                        //           (((allcategories[i]
+                                        //                       ?['amount']) /
+                                        //                   max) *
+                                        //               (220))
+                                        //       : 220.0 - 0,
+                                        // ),
+                                        AnimatedContainer(
+                                          duration:
+                                              const Duration(milliseconds: 800),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10.0),
+                                              topRight: Radius.circular(10.0),
+                                              bottomLeft: Radius.circular(0.0),
+                                              bottomRight: Radius.circular(0.0),
+                                            ),
+                                          ),
+                                          // height: 250,
+
+                                          height: state is AllExpenseInitial
+                                              ? (((allcategories[i]
+                                                          ?['amount']) /
+                                                      max) *
+                                                  (220))
+                                              : 0,
+                                          width: 40,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      // crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        RotatedBox(
+                                            quarterTurns: 3,
+                                            child: Row(
+                                              children: [
+                                                Text(i),
+                                                const SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(30),
+                                                        color: Colors.white),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child:
+                                                          TweenAnimationBuilder(
+                                                              tween: IntTween(
+                                                                begin: 0,
+                                                                end: allcategories[
+                                                                        i]
+                                                                    ?['amount'],
+                                                              ),
+                                                              duration:
+                                                                  const Duration(
+                                                                      seconds:
+                                                                          1),
+                                                              builder: (context,
+                                                                  value,
+                                                                  child) {
+                                                                return Row(
+                                                                  children: [
+                                                                    Image.asset(
+                                                                      "assets/images/rupee-sign-svgrepo-com_1.png",
+                                                                      height:
+                                                                          20,
+                                                                      width: 20,
+                                                                    ),
+                                                                    Text(
+                                                                      value
+                                                                          .toString(),
+                                                                      style: GoogleFonts.roboto(
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          color:
+                                                                              Colors.black),
+                                                                      // snapshot.data.toString(),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              }),
+                                                    )),
+                                              ],
+                                            )),
+                                        Icon(AppData().listIcon[i]),
+                                      ],
+                                    ),
+                                  ),
                                 ],
-                              ),
-                            ),
-                          ],
-                        )
-                      ]
-                    ]),
+                              )
+                            ]
+                          ]),
+                    ),
                   ],
                 ),
               )),

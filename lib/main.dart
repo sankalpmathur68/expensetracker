@@ -1,4 +1,4 @@
-import 'package:expensetracker/cubit/all_Expense_cubit.dart';
+import 'package:expensetracker/cubit/all_expense_cubit.dart';
 import 'package:expensetracker/cubit/auth_cubit.dart';
 import 'package:expensetracker/cubit/catagories_cubit.dart';
 import 'package:expensetracker/cubit/expense_cubit.dart';
@@ -49,12 +49,18 @@ class MyApp extends StatelessWidget {
                 // create: (context) => AuthCubit(),
                 child: BlocConsumer<AuthCubit, AuthState>(
                   listener: (context, state) {
-                    // TODO: implement listener
+                    if (state is Autherror) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(state.err)));
+                    }
                   },
                   builder: (context, state) {
                     // log("$state");
                     if (state is Authenticated) {
-                      return const HomePage();
+                      return BlocProvider(
+                        create: (context) => AllExpenseCubit(),
+                        child: const HomePage(),
+                      );
                     }
                     if (state is NotAuthenticated ||
                         state is Autherror ||

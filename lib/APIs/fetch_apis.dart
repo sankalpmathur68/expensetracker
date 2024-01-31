@@ -16,12 +16,13 @@ class FetchApis {
           .get();
       List<Expense> expenses = snapshot.docs
           .map((doc) => Expense(
+              id: doc.id,
               amount: doc['amount'],
               category: doc['category'],
               note: doc['note'],
               timestamp: doc['timestamp']))
           .toList();
-      return expenses;
+      return expenses.reversed.toList();
     } catch (e) {
       log("Error: ${e.toString()}");
     }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expensetracker/APIs/fetch_apis.dart';
 import 'package:expensetracker/APIs/post_apis.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -74,6 +75,8 @@ class ExpenseCubit extends Cubit<ExpenseState> {
         timestamp: Timestamp.now());
     PostAPIs().addExpensToDataBase(expense);
     FetchApis().fetchSortedExpenses();
+
+    emit(ExpenseInitial());
   }
 
   final List categories = [
@@ -88,7 +91,7 @@ class ExpenseCubit extends Cubit<ExpenseState> {
 }
 
 class ExpenseInitial extends ExpenseState {
-  final amountList;
+  final List? amountList;
   ExpenseInitial({this.amountList});
 }
 

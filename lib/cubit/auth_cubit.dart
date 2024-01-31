@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial()) {
     User? user = FirebaseAuth.instance.currentUser;
-    print(user);
+    log(user.toString());
     // UserCredential usercredential = FirebaseAuth.instance.currentUser;
     if (user != null) {
       emit(Authenticated(user));
@@ -29,10 +29,10 @@ class AuthCubit extends Cubit<AuthState> {
           password: password,
         );
         emit(Authenticated(userCredential.user));
-      } catch (e) {
-        emit(Autherror(err: "$e"));
+      } on FirebaseAuthException catch (err) {
+        emit(Autherror(err: "${(err as dynamic).message}"));
 
-        log("Error signing in: $e");
+        log("Error signing in: $err");
         return null;
       }
     });
@@ -64,6 +64,24 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthRegister());
   }
 
+  login() {
+    emit(NotAuthenticated('', ''));
+  }
+
+//password reset
+  Future<void> sendPasswordResetLink() async {
+    emit(AuthLoading());
+    try {
+      await _auth.sendPasswordResetEmail(email: email_cubit);
+      Future.delayed(const Duration(seconds: 2), () {
+        emit(Autherror(
+            err: "Link has been Shared on Your Registered Email Address."));
+      });
+    } on FirebaseAuthException catch (err) {
+      emit(Autherror(err: "${(err as dynamic).message}"));
+    }
+  }
+
   // Sign out
   Future<void> signOut() async {
     emit(AuthLoading());
@@ -87,8 +105,8 @@ class Authenticated extends AuthState {
 class AuthLoading extends AuthState {}
 
 class NotAuthenticated extends AuthState {
-  String email;
-  String password;
+  String? email;
+  String? password;
   NotAuthenticated(this.email, this.password);
 }
 

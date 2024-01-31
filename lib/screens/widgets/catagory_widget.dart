@@ -110,7 +110,7 @@ class CategoryWidget extends StatelessWidget {
             child: IndividualCatagory(
               prefixicon: selectedIcon,
               mainAxixSize: MainAxisSize.max,
-              color: Color(int.parse("0XFF7E6363")),
+              color: Colors.blue.shade200,
               title: selectedCategory,
               onDelete: () {
                 onDeleteblock();

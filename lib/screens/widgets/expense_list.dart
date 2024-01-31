@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:expensetracker/APIs/wholeAppData.dart';
-import 'package:expensetracker/cubit/all_Expense_cubit.dart';
+import 'package:expensetracker/APIs/whole_app_data.dart';
+import 'package:expensetracker/cubit/all_expense_cubit.dart';
 import 'package:expensetracker/screens/widgets/loading_widget.dart';
+import 'package:expensetracker/screens/widgets/styled_button.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,88 +19,117 @@ class ExpenseList extends StatelessWidget {
         builder: (context, state) {
       if (state is AllExpenseInitial) {
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 16),
           child: LimitedBox(
-            maxHeight: 500,
+            maxHeight: 300,
             maxWidth: double.infinity,
             child: ListView.builder(
                 itemCount: state.listExpenses?.length,
                 // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 //     crossAxisCount: 2),
                 itemBuilder: (BuildContext context, index) {
-                  return ConnectionState == ConnectionState.waiting
-                      ? NoteLoadingWidget()
-                      : Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 5, 5, 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: const Offset(4, 7),
-                                      spreadRadius: 1,
-                                      blurRadius: 10,
-                                      color: Colors.black.withOpacity(0.1)),
-                                  BoxShadow(
-                                      offset: const Offset(4, 7),
-                                      spreadRadius: 1,
-                                      blurRadius: 10,
-                                      color: Colors.blue.withOpacity(0.2))
-                                ],
-                                borderRadius: BorderRadius.circular(20)),
-                            child: ListTile(
-                              title: state.listExpenses?[index].category != null
-                                  ? Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "${state.listExpenses?[index].category}",
-                                        style: GoogleFonts.roboto(fontSize: 20),
-                                      ),
-                                    )
-                                  : NoteLoadingWidget(),
-                              subtitle: state.listExpenses?[index].note == ''
-                                  ? Container()
-                                  : state.listExpenses?[index].note != null
-                                      ? Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "${state.listExpenses?[index].note}",
-                                            style: GoogleFonts.roboto(
-                                                fontSize: 20),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        )
-                                      : NoteLoadingWidget(),
-                              leading: Icon(AppData().list_icon[
-                                  state.listExpenses?[index].category]),
-                              trailing:
-                                  state.listExpenses?[index].amount != null
-                                      ? Padding(
-                                          padding: const EdgeInsets.all(0.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Image.asset(
-                                                'assets/images/rupee-sign-svgrepo-com_1.png',
-                                                height: 20,
-                                                width: 20,
-                                              ),
-                                              Text(
-                                                "${state.listExpenses?[index].amount}",
-                                                style: GoogleFonts.roboto(
-                                                    fontSize: 20),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      : SizedBox(
-                                          width: 100,
-                                          child: NoteLoadingWidget()),
-                              isThreeLine: false,
-                              dense: true,
-                            ),
-                          ),
-                        );
+                  log((state.listExpenses?.length).toString());
+                  final day =
+                      '${state.listExpenses![index].timestamp.toDate().day < 10 ? "0${state.listExpenses?[index].timestamp.toDate().day}" : state.listExpenses?[index].timestamp.toDate().day}/';
+                  final month =
+                      '${state.listExpenses![index].timestamp.toDate().month < 10 ? "0${state.listExpenses?[index].timestamp.toDate().month}" : state.listExpenses?[index].timestamp.toDate().month}/';
+                  final year =
+                      '${state.listExpenses?[index].timestamp.toDate().year}';
+                  final date = day + month + year;
+                  final hour =
+                      '${state.listExpenses![index].timestamp.toDate().hour < 10 ? "0${state.listExpenses?[index].timestamp.toDate().hour}" : state.listExpenses?[index].timestamp.toDate().hour}';
+                  final minute =
+                      '${state.listExpenses![index].timestamp.toDate().minute < 10 ? "0${state.listExpenses?[index].timestamp.toDate().minute}" : state.listExpenses?[index].timestamp.toDate().minute}';
+
+                  final time = "$hour:$minute";
+
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 5, 5, 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                offset: const Offset(4, 7),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                color: Colors.black.withOpacity(0.1)),
+                            BoxShadow(
+                                offset: const Offset(4, 7),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                color: Colors.blue.withOpacity(0.2))
+                          ],
+                          borderRadius: BorderRadius.circular(20)),
+                      child: ListTile(
+                        onLongPress: () {
+                          showDialog(
+                              context: context,
+                              builder: (context_) {
+                                return AlertDialog(
+                                  title: const Text("Delete Expense"),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        const Text(
+                                            "Do You Want To Delete This Expense ?"),
+                                        StyledButton(
+                                            onTap: () {
+                                              BlocProvider.of<AllExpenseCubit>(
+                                                      context)
+                                                  .deleteSelectedExpense(state
+                                                      .listExpenses?[index].id);
+                                            },
+                                            child: const Text("Continue")),
+                                        StyledButton(
+                                            onTap: () {},
+                                            child: const Text("Keep Expense"))
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
+                        },
+                        title: state.listExpenses?[index].category != null
+                            ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "${state.listExpenses?[index].category}",
+                                  style: GoogleFonts.roboto(fontSize: 20),
+                                ),
+                              )
+                            : const NoteLoadingWidget(),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('$date  $time'),
+                        ),
+                        leading: Icon(AppData()
+                            .listIcon[state.listExpenses?[index].category]),
+                        trailing: state.listExpenses?[index].amount != null
+                            ? Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/rupee-sign-svgrepo-com_1.png',
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    Text(
+                                      "${state.listExpenses?[index].amount}",
+                                      style: GoogleFonts.roboto(fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(
+                                width: 100, child: NoteLoadingWidget()),
+                        isThreeLine: false,
+                        dense: true,
+                      ),
+                    ),
+                  );
                 }),
           ),
         );
@@ -125,6 +156,7 @@ class _NoteLoadingWidgetState extends State<NoteLoadingWidget> {
     }
   }
 
+  @override
   void initState() {
     _togglePosition();
     Timer.periodic(const Duration(milliseconds: 10), (timer) {
@@ -136,12 +168,12 @@ class _NoteLoadingWidgetState extends State<NoteLoadingWidget> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: AnimatedOpacity(
           opacity: animate ? 0 : 1,
-          duration: Duration(seconds: 1),
+          duration: const Duration(seconds: 1),
           child: Container(
             height: 10,
             width: double.infinity,

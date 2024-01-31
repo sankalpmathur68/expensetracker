@@ -8,6 +8,7 @@ import 'package:expensetracker/screens/widgets/styled_button.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AddExpenxe extends StatelessWidget {
   const AddExpenxe({super.key});
@@ -26,7 +27,9 @@ class AddExpenxe extends StatelessWidget {
                 return CategoryWidget(
                     selectedIcon: Icon(
                       BlocProvider.of<CategoryCubit>(context).iconList[
-                          state is CategorySelected ? state.catagory : 'Transportation'],
+                          state is CategorySelected
+                              ? state.catagory
+                              : 'Transportation'],
                       color: Colors.white,
                     ),
                     selectedCategory:
@@ -35,7 +38,6 @@ class AddExpenxe extends StatelessWidget {
                     inputTitle: "Search Categories",
                     iconMap: BlocProvider.of<CategoryCubit>(context).iconList,
                     onTapblock: (e) {
-                      print(e);
                       BlocProvider.of<CategoryCubit>(context)
                           .updateToSelected(e);
                     },
@@ -43,8 +45,7 @@ class AddExpenxe extends StatelessWidget {
                       BlocProvider.of<CategoryCubit>(context).updateToInitial();
                     },
                     categories: state is CategoryInitial
-                        ? state.catagories ?? BlocProvider.of<CategoryCubit>(context)
-                                .searchedList
+                        ? state.catagories
                         : BlocProvider.of<CategoryCubit>(context).searchedList,
                     onInputUpdate: (value) {
                       BlocProvider.of<CategoryCubit>(context).sortedList(value);
@@ -82,7 +83,8 @@ class AddExpenxe extends StatelessWidget {
                     },
                     OnEmptyListTitle: '',
                     categories: state is ExpenseInitial
-                        ? state.amountList ?? BlocProvider.of<ExpenseCubit>(context).categories
+                        ? state.amountList ??
+                            BlocProvider.of<ExpenseCubit>(context).categories
                         : BlocProvider.of<ExpenseCubit>(context).categories,
                     onInputUpdate: (e) {
                       BlocProvider.of<ExpenseCubit>(context).addAmountinlist(e);
@@ -116,6 +118,19 @@ class AddExpenxe extends StatelessWidget {
                               BlocProvider.of<ExpenseCubit>(context)
                                   .uploadExpenseToDatabase(stateExp.amount,
                                       stateCat.catagory, stateExp.note);
+                              BlocProvider.of<CategoryCubit>(context)
+                                  .updateToInitial();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                      backgroundColor: Colors.blue.shade200,
+                                      content: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "Expense Added",
+                                          style: GoogleFonts.roboto(
+                                              color: Colors.black),
+                                        ),
+                                      )));
                             },
                             child: const Text('Add'));
                       }

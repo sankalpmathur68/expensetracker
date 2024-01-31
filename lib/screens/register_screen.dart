@@ -3,6 +3,7 @@ import 'package:expensetracker/screens/widgets/input_widget.dart';
 import 'package:expensetracker/screens/widgets/styled_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 class Register extends StatelessWidget {
@@ -88,11 +89,17 @@ class Register extends StatelessWidget {
                                 style: GoogleFonts.roboto(
                                     color: Colors.black.withOpacity(0.6)),
                               ),
-                              Text(
-                                "Login",
-                                style: GoogleFonts.roboto(
-                                    fontSize: 17,
-                                    color: Color(int.parse('0xFFF05941'))),
+                              GestureDetector(
+                                onTap: () {
+                                  // BlocProvider.of<AuthCubit>(context).login();
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "Login",
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 17,
+                                      color: Color(int.parse('0xFFF05941'))),
+                                ),
                               ),
                             ],
                           )
