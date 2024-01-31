@@ -1,5 +1,4 @@
 import 'package:expensetracker/cubit/all_expense_cubit.dart';
-import 'package:expensetracker/screens/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,7 +37,7 @@ class TotalExpenditure extends StatelessWidget {
                 children: [
                   TweenAnimationBuilder(
                       tween: IntTween(begin: 0, end: state.total?.toInt()),
-                      duration: Duration(seconds: 1),
+                      duration: const Duration(seconds: 1),
                       builder: (context, value, child) {
                         return Row(
                           mainAxisSize: MainAxisSize.min,

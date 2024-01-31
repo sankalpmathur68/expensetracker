@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:expensetracker/APIs/delete_apis.dart';
 import 'package:expensetracker/APIs/fetch_apis.dart';
 import 'package:expensetracker/APIs/post_apis.dart';
-import 'package:expensetracker/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,13 +63,13 @@ class AllExpenseCubit extends Cubit<AllExpenseState> {
 
     emit(AllExpenseLoading());
     filteredExpenses.clear();
-    log(range.end.add(Duration(days: 1)).toString());
-    log(range.start.subtract(Duration(days: 1)).toString());
+    log(range.end.add(const Duration(days: 1)).toString());
+    log(range.start.subtract(const Duration(days: 1)).toString());
 
     for (Expense expense in expenseList) {
       if (expense.timestamp
               .toDate()
-              .isBefore(range.end.add(Duration(days: 1))) &&
+              .isBefore(range.end.add(const Duration(days: 1))) &&
           (expense.timestamp.toDate().isAfter(range.start))) {
         // log((AppData().months[expense.timestamp.toDate().month] == _month)
         //     .toString());

@@ -28,7 +28,7 @@ class LoadingScreen extends StatelessWidget {
               ),
               height: 200,
               width: 200,
-              child: Loading())),
+              child: const Loading())),
     );
   }
 }
